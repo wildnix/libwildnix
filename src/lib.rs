@@ -1,5 +1,7 @@
 #![no_std]
 
+pub use libwildnix_macros::main;
+
 pub const SYS_DEBUG: u64 = 0;
 pub const SYS_WRITE: u64 = 1;
 pub const SYS_READ_KEY: u64 = 2;
@@ -60,13 +62,7 @@ pub unsafe fn syscall2(num: u64, arg1: u64, arg2: u64) -> u64 {
 }
 
 pub fn write(bytes: &[u8]) -> u64 {
-    unsafe {
-        syscall2(
-            SYS_WRITE,
-            bytes.as_ptr() as u64,
-            bytes.len() as u64,
-        )
-    }
+    unsafe { syscall2(SYS_WRITE, bytes.as_ptr() as u64, bytes.len() as u64) }
 }
 
 pub fn read_key() -> Option<u8> {
@@ -126,4 +122,15 @@ macro_rules! println {
             $($arg)*
         )
     }};
+}
+
+#[cfg(feature = "panic-handler")]
+use core::panic::PanicInfo;
+
+#[cfg(feature = "panic-handler")]
+#[panic_handler]
+fn panic(_info: &PanicInfo) -> ! {
+    write(b"panic\n");
+
+    loop {}
 }

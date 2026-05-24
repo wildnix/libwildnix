@@ -25,9 +25,11 @@ rust-version = "1.88"
 crate-type = ["rlib"]
 
 [dependencies]
+libwildnix-macros = "0.1.0"
 
 [features]
-default = []
+default = ["panic-handler"]
+panic-handler = []
 
 [package.metadata.docs.rs]
 all-features = true
