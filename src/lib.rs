@@ -97,16 +97,13 @@ pub fn read_line(buffer: &mut [u8]) -> usize {
         let c = read_key();
         
         if c == b'\n' {
-            write(b"\n");
             break;
         } else if c == 8 || c == 127 { // backspace or DEL
             if len > 0 {
                 len -= 1;
-                write(b"\x08 \x08"); // backspace, space, backspace
             }
         } else if len < buffer.len() {
             buffer[len] = c;
-            write(&[c]); // echo character
             len += 1;
         }
     }
