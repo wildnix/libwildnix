@@ -25,7 +25,7 @@ rust-version = "1.88"
 crate-type = ["rlib"]
 
 [dependencies]
-libwildnix-macros = { git = "https://github.com/wildnix/libwildnix-macros" }
+libwildnix-macros = { package = "libwildnix-macros", git = "https://github.com/wildnix/libwildnix-macros" }
 
 [features]
 default = ["panic-handler"]
