@@ -89,6 +89,20 @@ pub fn read_key() -> Option<u8> {
     }
 }
 
+pub fn read_line(buffer: &mut [u8]) -> usize {
+    let mut len = 0;
+    while len < buffer.len() {
+        if let Some(c) = read_key() {
+            if c == b'\n' {
+                break;
+            }
+            buffer[len] = c;
+            len += 1;
+        }
+    }
+    len
+}
+
 pub fn exit(code: u64) -> ! {
     unsafe { syscall1_noreturn(SYS_EXIT, code) }
 }
