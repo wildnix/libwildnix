@@ -6,6 +6,7 @@ pub const SYS_DEBUG: u64 = 0;
 pub const SYS_WRITE: u64 = 1;
 pub const SYS_READ_KEY: u64 = 2;
 pub const SYS_EXIT: u64 = 3;
+pub const SYS_YIELD: u64 = 4;
 
 #[inline(always)]
 pub unsafe fn syscall0(num: u64) -> u64 {
@@ -86,6 +87,7 @@ pub fn read_key() -> u8 {
         if c != 0 {
             return c as u8;
         }
+        unsafe { syscall0(SYS_YIELD) };
     }
 }
 
@@ -95,13 +97,16 @@ pub fn read_line(buffer: &mut [u8]) -> usize {
         let c = read_key();
         
         if c == b'\n' {
+            write(b"\n");
             break;
         } else if c == 8 || c == 127 { // backspace or DEL
             if len > 0 {
                 len -= 1;
+                write(b"\x08 \x08"); // backspace, space, backspace
             }
         } else if len < buffer.len() {
             buffer[len] = c;
+            write(&[c]); // echo character
             len += 1;
         }
     }
