@@ -80,23 +80,31 @@ pub fn write(bytes: &[u8]) {
     unsafe { syscall2(SYS_WRITE, bytes.as_ptr() as u64, bytes.len() as u64) };
 }
 
-pub fn read_key() -> Option<u8> {
-    let c = unsafe { syscall0(SYS_READ_KEY) };
-    if c == 0 {
-        None
-    } else {
-        Some(c as u8)
+pub fn read_key() -> u8 {
+    loop {
+        let c = unsafe { syscall0(SYS_READ_KEY) };
+        if c != 0 {
+            return c as u8;
+        }
     }
 }
 
 pub fn read_line(buffer: &mut [u8]) -> usize {
     let mut len = 0;
-    while len < buffer.len() {
-        if let Some(c) = read_key() {
-            if c == b'\n' {
-                break;
+    loop {
+        let c = read_key();
+        
+        if c == b'\n' {
+            write(b"\n");
+            break;
+        } else if c == 8 || c == 127 { // backspace or DEL
+            if len > 0 {
+                len -= 1;
+                write(b"\x08 \x08"); // backspace, space, backspace
             }
+        } else if len < buffer.len() {
             buffer[len] = c;
+            write(&[c]); // echo character
             len += 1;
         }
     }
