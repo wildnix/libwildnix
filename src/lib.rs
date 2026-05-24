@@ -6,7 +6,6 @@ pub const SYS_DEBUG: u64 = 0;
 pub const SYS_WRITE: u64 = 1;
 pub const SYS_READ_KEY: u64 = 2;
 pub const SYS_EXIT: u64 = 3;
-pub const SYS_YIELD: u64 = 4;
 
 #[inline(always)]
 pub unsafe fn syscall0(num: u64) -> u64 {
@@ -82,13 +81,8 @@ pub fn write(bytes: &[u8]) {
 }
 
 pub fn read_key() -> u8 {
-    loop {
-        let c = unsafe { syscall0(SYS_READ_KEY) };
-        if c != 0 {
-            return c as u8;
-        }
-        unsafe { syscall0(SYS_YIELD) };
-    }
+    // The syscall blocks until a key is available
+    unsafe { syscall0(SYS_READ_KEY) as u8 }
 }
 
 pub fn read_line(buffer: &mut [u8]) -> usize {
