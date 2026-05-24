@@ -1,0 +1,33 @@
+[package]
+name = "libwildnix"
+version = "0.1.0"
+edition = "2021"
+
+authors = ["segfaultuwu"]
+
+description = "Official userspace library for the WildNIX operating system"
+
+license = "GPL-3.0-only"
+
+repository = "https://github.com/wildnix/libwildnix"
+homepage = "https://github.com/wildnix/libwildnix"
+documentation = "https://docs.rs/libwildnix"
+
+readme = "README.md"
+
+keywords = ["wildnix", "syscall", "kernel", "os", "userspace"]
+
+categories = ["os", "no-std"]
+
+rust-version = "1.88"
+
+[lib]
+crate-type = ["rlib"]
+
+[dependencies]
+
+[features]
+default = []
+
+[package.metadata.docs.rs]
+all-features = true
