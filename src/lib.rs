@@ -16,10 +16,10 @@ pub unsafe fn syscall0(num: u64) -> u64 {
             inlateout("rax") num => ret,
             lateout("rcx") _,
             lateout("r11") _,
+            lateout("rdx") _,
             lateout("r8")  _,
             lateout("r9")  _,
             lateout("r10") _,
-            options(nostack),
         );
     }
     ret
@@ -35,10 +35,10 @@ pub unsafe fn syscall1(num: u64, arg1: u64) -> u64 {
             in("rdi") arg1,
             lateout("rcx") _,
             lateout("r11") _,
+            lateout("rdx") _,
             lateout("r8")  _,
             lateout("r9")  _,
             lateout("r10") _,
-            options(nostack),
         );
     }
     ret
@@ -55,10 +55,10 @@ pub unsafe fn syscall2(num: u64, arg1: u64, arg2: u64) -> u64 {
             in("rsi") arg2,
             lateout("rcx") _,
             lateout("r11") _,
+            lateout("rdx") _,
             lateout("r8")  _,
             lateout("r9")  _,
             lateout("r10") _,
-            options(nostack),
         );
     }
     ret
@@ -71,7 +71,7 @@ pub unsafe fn syscall1_noreturn(num: u64, arg1: u64) -> ! {
             "syscall",
             in("rax") num,
             in("rdi") arg1,
-            options(nostack, noreturn),
+            options(noreturn),
         );
     }
 }
