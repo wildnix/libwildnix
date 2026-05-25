@@ -90,6 +90,12 @@ pub fn read_line(buffer: &mut [u8]) -> usize {
     loop {
         let c = read_key();
 
+        // Ignore NUL (0) which indicates no key available from kernel
+        if c == 0 { continue; }
+
+        // Treat CR as newline
+        let c = if c == b'\r' { b'\n' } else { c };
+
         if c == b'\n' {
             write(b"\n");
             break;
