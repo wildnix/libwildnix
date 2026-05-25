@@ -89,16 +89,19 @@ pub fn read_line(buffer: &mut [u8]) -> usize {
     let mut len = 0;
     loop {
         let c = read_key();
-        
+
         if c == b'\n' {
+            write(b"\n");
             break;
         } else if c == 8 || c == 127 { // backspace or DEL
             if len > 0 {
                 len -= 1;
+                write(b"\x08 \x08");
             }
         } else if len < buffer.len() {
             buffer[len] = c;
             len += 1;
+            write(&[c]);
         }
     }
     len
